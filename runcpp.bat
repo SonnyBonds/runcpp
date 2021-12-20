@@ -260,4 +260,10 @@ else
     build();
 }
 
-WScript.Quit(run(output, true));
+var args = ""
+for(var i = 1; i < WScript.Arguments.Count(); i++)
+{
+    args += " \"" + WScript.Arguments(i) + "\""
+}
+
+WScript.Quit(run(output + args, true));
