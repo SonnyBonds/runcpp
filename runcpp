@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -e
+
+input=$1
+output=./$1x # Will only work with relative paths right now
+arguments="${@:2}"
+
+if [ -z "$input" ]; then
+    echo "Usage: runcpp input.cpp [arguments to compiled program]"
+    exit 1
+fi
+
+run () {
+    $output $arguments
+    exit
+}
+
+if test $input -ot $output; then
+   run $output
+fi
+
+if command -v g++ &> /dev/null
+then
+    g++ -std=c++17 $input -o $output
+    run
+fi
+
+if command -v clang++ &> /dev/null
+then
+    clang++ -std=c++17 $input -o $output
+    run
+fi
+
+>&2 echo "No compiler found."
+exit 1
